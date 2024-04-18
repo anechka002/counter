@@ -1,0 +1,11 @@
+.counter {
+  border: 1px solid #161515;
+  border-radius: 5px;
+  background-color: #adf1f7;
+  padding: 15px;
+  text-align: center;
+}
+
+.valueItem {
+  color: red;
+}
