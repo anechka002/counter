@@ -10,17 +10,16 @@ function App() {
     let maxNumber = JSON.parse(localStorage.getItem('maxValue'));
     return {
       minNumber: minNumber ? minNumber : 0,
-      maxNumber: maxNumber ? maxNumber : 0,
+      maxNumber: maxNumber ? maxNumber : 5,
     };
   };
 
   const [minValue, setMinValue] = useState<number>(getFromStorage().minNumber);
   const [maxValue, setMaxValue] = useState<number>(getFromStorage().maxNumber);
   const [count, setCount] = useState<number>(minValue);
-  const [minInputValue, setMinInputValue] = useState<number>(minValue)
-  const [maxInputValue, setMaxInputValue] = useState<number>(maxValue)
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  const [valueRed, setValueRed] = useState(false);
+  const [minInputValue, setMinInputValue] = useState<number>(minValue);
+  const [maxInputValue, setMaxInputValue] = useState<number>(maxValue);
+  const [valueError, setValueError] = useState<string | null>(null)
 
   useEffect(()=>{
     localStorage.setItem('maxValue', JSON.stringify(maxValue));
@@ -40,23 +39,34 @@ function App() {
         setMinInputValue={setMinInputValue}
         maxInputValue={maxInputValue}
         setMaxInputValue={setMaxInputValue}
-        valueRed={valueRed}
-        setValueRed={setValueRed}
       />
       <Counter
         minValue={minValue}
+        maxValue={maxValue}
         count={count}
         setCount={setCount}
-        isDisabled={isDisabled}
-        setIsDisabled={setIsDisabled}
-        valueRed={valueRed}
-        setValueRed={setValueRed}
+        setValueError={setValueError}
       />
     </div>
   );
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // useEffect(()=>{
 //   localStorage.setItem('counterValue', JSON.stringify(count))
