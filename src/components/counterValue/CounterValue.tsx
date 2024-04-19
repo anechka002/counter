@@ -13,11 +13,9 @@ type PropsType = {
   setMinInputValue: (value:number)=>void
   maxInputValue: number
   setMaxInputValue: (value:number)=>void
-  valueRed: boolean
-  setValueRed: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setCount, minInputValue, setMinInputValue, maxInputValue, setMaxInputValue, valueRed, setValueRed
+function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setCount, minInputValue, setMinInputValue, maxInputValue, setMaxInputValue,
 }: PropsType) {
 
   const onChangeMinInputValue = (e:ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +41,7 @@ function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setC
         <div>
           <span>max value:</span>
           <input
-            className={s.inputStyle}
+            className={minInputValue >= maxInputValue ? s.inputRed : s.inputStyle}
             onChange={onChangeMaxInputValue}
             value={maxInputValue}
             type="number"
@@ -52,7 +50,7 @@ function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setC
         <div>
           <span>start value:</span>
           <input
-            className={s.inputStyle}
+            className={minInputValue < 0 || minInputValue >= maxInputValue ? s.inputRed : s.inputStyle}
             onChange={onChangeMinInputValue}
             value={minInputValue}
             type="number"
@@ -60,12 +58,12 @@ function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setC
         </div>
       </div>
       <div className={s.btnField}>
-        {/* <button onClick={onClickSetNewValueHandler}>set</button> */}
-        <Button 
+        <button className={s.btn} disabled={minInputValue < 0 || minInputValue >= maxInputValue} onClick={onClickSetNewValueHandler}>set</button>
+        {/* <Button 
           className={s.btn}
           title={'set'} 
           callBack={onClickSetNewValueHandler}
-        />
+        /> */}
       </div>
     </div>
   );
