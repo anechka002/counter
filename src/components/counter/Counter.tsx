@@ -5,59 +5,39 @@ import Button from '../button/Button';
 
 type PropsType = {
   minValue: number
+  maxValue: number
   count: number
   setCount: React.Dispatch<React.SetStateAction<number>>
-  isDisabled: boolean
-  setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>
-  valueRed: boolean
-  setValueRed: React.Dispatch<React.SetStateAction<boolean>>
+  setValueError: (value: string | null)=>void
 }
 
-function Counter({minValue, count, setCount, isDisabled, setIsDisabled, valueRed, setValueRed}: PropsType) {
+function Counter({minValue, maxValue, count, setCount, setValueError}: PropsType) {
 
-  useEffect(() => {
-    const valueRedFromLocalStorage = localStorage.getItem('maxValue');
-    if (valueRedFromLocalStorage) {
-        setValueRed(JSON.parse(valueRedFromLocalStorage));
-    }
-}, []);
-
-//     const valueRedFromLocalStorage = localStorage.getItem('starValue');
-//     if (valueRedFromLocalStorage) {
-//       JSON.parse(valueRedFromLocalStorage);
-//       setValueRed(valueRed)
+//   useEffect(() => {
+//     if() {
+//       setValueError("enter values and press 'set'")
 //     }
 // }, []);
 
   const incrementHandler = () => {
-    setCount(count + 1)
-    sumSetCount()
+    if(count < maxValue) {
+      setCount(count + 1)
+    }
   }
 
   const resetHandler = () => {
     setCount(minValue)
-    setValueRed(false)
-  }
-
-  const sumSetCount = () => {
-    let valueAsNumber = localStorage.getItem('maxValue')
-    if(valueAsNumber) {
-      let value = JSON.parse(valueAsNumber)
-      if(count === value) {
-        setCount(value)
-        setIsDisabled(true)
-        setValueRed(true)
-      } 
-    }
   }
 
   return (
     <div className={s.counter}>
-      <div className={valueRed ? s.valueItem : ''}>{count}</div>
-      <button disabled={isDisabled} onClick={incrementHandler}>inc</button>
-      <button onClick={resetHandler}>reset</button>
-      {/* <Button title={'inc'} callBack={()=>{}}/>
-      <Button title={'reset'} callBack={()=>{}}/> */}
+      <div className={count === maxValue ? s.valueItem : s.counterItem}>{count}</div>
+      <div className={s.btnStyle}>
+        <button className={s.btn} disabled={count === maxValue} onClick={incrementHandler}>inc</button>
+        <button className={s.btn} onClick={resetHandler}>reset</button>
+        {/* <Button title={'inc'} callBack={()=>{}}/>
+        <Button title={'reset'} callBack={()=>{}}/> */}
+      </div>
     </div>
   )
 }
