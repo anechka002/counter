@@ -19,7 +19,7 @@ function App() {
   const [count, setCount] = useState<number>(minValue);
   const [minInputValue, setMinInputValue] = useState<number>(minValue);
   const [maxInputValue, setMaxInputValue] = useState<number>(maxValue);
-  const [valueError, setValueError] = useState<string | null>(null)
+  const [inputFocus, setInputFocus] = useState<boolean>(false)
 
   useEffect(()=>{
     localStorage.setItem('maxValue', JSON.stringify(maxValue));
@@ -39,13 +39,17 @@ function App() {
         setMinInputValue={setMinInputValue}
         maxInputValue={maxInputValue}
         setMaxInputValue={setMaxInputValue}
+        inputFocus={inputFocus}
+        setInputFocus={setInputFocus}
       />
       <Counter
         minValue={minValue}
         maxValue={maxValue}
         count={count}
         setCount={setCount}
-        setValueError={setValueError}
+        inputFocus={inputFocus}
+        minInputValue={minInputValue}
+        maxInputValue={maxInputValue}
       />
     </div>
   );
