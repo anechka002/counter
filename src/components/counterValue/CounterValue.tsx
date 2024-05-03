@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import s from './CounterValue.module.css';
 import Button from '../button/Button';
 
@@ -13,10 +13,13 @@ type PropsType = {
   setMinInputValue: (value:number)=>void
   maxInputValue: number
   setMaxInputValue: (value:number)=>void
+  inputFocus: boolean
+  setInputFocus: (value: boolean) => void
 };
 
-function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setCount, minInputValue, setMinInputValue, maxInputValue, setMaxInputValue,
+function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setCount, minInputValue, setMinInputValue, maxInputValue, setMaxInputValue, inputFocus, setInputFocus
 }: PropsType) {
+  const [disabledBtn, setDisabledBtn] = useState<boolean>(false)
 
   const onChangeMinInputValue = (e:ChangeEvent<HTMLInputElement>) => {
     setMinInputValue(+e.currentTarget.value)
@@ -32,8 +35,16 @@ function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setC
     setCount(minInputValue)
     setMinValue(minInputValue)
     setMaxValue(maxInputValue)
+    setDisabledBtn(true)
   };
 
+  const onFocusHandler = () => {
+    setInputFocus(true)
+    setDisabledBtn(false)
+  }
+  const onBlurHandler = () => {
+    setInputFocus(false)
+  }
 
   return (
     <div className={s.counterValue}>
@@ -45,6 +56,8 @@ function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setC
             onChange={onChangeMaxInputValue}
             value={maxInputValue}
             type="number"
+            onFocus={onFocusHandler}
+            onBlur={onBlurHandler}
           />      
         </div>
         <div>
@@ -54,19 +67,23 @@ function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setC
             onChange={onChangeMinInputValue}
             value={minInputValue}
             type="number"
+            onFocus={onFocusHandler}
+            onBlur={onBlurHandler}
           />      
         </div>
       </div>
       <div className={s.btnField}>
-        <button className={s.btn} disabled={minInputValue < 0 || minInputValue >= maxInputValue} onClick={onClickSetNewValueHandler}>set</button>
-        {/* <Button 
+        <Button 
           className={s.btn}
           title={'set'} 
           callBack={onClickSetNewValueHandler}
-        /> */}
+          disabled={minInputValue < 0 || minInputValue >= maxInputValue || disabledBtn}
+        />
       </div>
     </div>
   );
 }
 
 export default CounterValue;
+
+{/* <input value={minInputValue >= maxInputValue && minInputValue} /> */}
