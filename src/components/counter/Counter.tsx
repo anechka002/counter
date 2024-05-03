@@ -2,22 +2,27 @@ import React, { useEffect, useState } from 'react';
 import s from './Counter.module.css'
 import Button from '../button/Button';
 
-
 type PropsType = {
   minValue: number
   maxValue: number
   count: number
-  setCount: React.Dispatch<React.SetStateAction<number>>
-  setValueError: (value: string | null)=>void
+  setCount: (value: number) => void
+  inputFocus: boolean
+  maxInputValue: number
+  minInputValue: number
 }
 
-function Counter({minValue, maxValue, count, setCount, setValueError}: PropsType) {
+function Counter({minValue, maxValue, count, setCount, inputFocus, maxInputValue, minInputValue}: PropsType) {
+  const [error, setError] = useState('')
+  const blueMessage = "enter values and press 'set'";
 
-//   useEffect(() => {
-//     if() {
-//       setValueError("enter values and press 'set'")
-//     }
-// }, []);
+  useEffect(() => {
+    if(minInputValue >= maxInputValue || minInputValue < 0) {
+      setError('incorect value')
+    } else {
+      setError('')
+    }
+  }, [minInputValue, maxInputValue]);
 
   const incrementHandler = () => {
     if(count < maxValue) {
@@ -31,15 +36,30 @@ function Counter({minValue, maxValue, count, setCount, setValueError}: PropsType
 
   return (
     <div className={s.counter}>
-      <div className={count === maxValue ? s.valueItem : s.counterItem}>{count}</div>
+      <div className={count === maxValue ? s.valueItem : s.counterItem}>
+
+        {!inputFocus && count}
+        {inputFocus && !error  && <span className={s.message}>{blueMessage}</span>}
+        {error && <span className={s.error}>{error}</span>}
+
+      </div>
       <div className={s.btnStyle}>
-        <button className={s.btn} disabled={count === maxValue} onClick={incrementHandler}>inc</button>
-        <button className={s.btn} onClick={resetHandler}>reset</button>
-        {/* <Button title={'inc'} callBack={()=>{}}/>
-        <Button title={'reset'} callBack={()=>{}}/> */}
+        <Button 
+          className={s.btn}
+          title={'inc'} 
+          callBack={incrementHandler}
+          disabled={inputFocus || count === maxValue}
+        />
+        <Button 
+          className={s.btn}
+          title={'reset'} 
+          callBack={resetHandler}
+          disabled={inputFocus}
+        />
       </div>
     </div>
   )
 }
 
 export default Counter
+

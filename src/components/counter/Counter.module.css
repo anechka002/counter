@@ -20,7 +20,7 @@
   border: 2px solid #5be5f1;
   border-radius: 5px;
   margin-bottom: 10px;
-  font-size: 50px;
+  font-size: 25px;
   font-weight: 700;
 }
 
@@ -32,7 +32,7 @@
   border: 2px solid #5be5f1;
   border-radius: 5px;
   margin-bottom: 10px;
-  font-size: 50px;
+  font-size: 25px;
   font-weight: 700;
   color: red;
 }
@@ -54,4 +54,12 @@
   background-color: #5be5f1;
   border: 2px solid #5be5f1;
   border-radius: 5px;
+}
+
+.error {
+  color: red;
+}
+
+.message {
+  color: #5be5f1;
 }
