@@ -1,42 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import s from './Counter.module.css'
 import Button from '../button/Button';
+import { useAppSelector } from '../../hooks/hooks';
+import { useDispatch } from 'react-redux';
+import { incValueAC, resetValueAC } from '../../bll/countReducer';
 
 type PropsType = {
-  minValue: number
-  maxValue: number
-  count: number
-  setCount: (value: number) => void
   inputFocus: boolean
-  maxInputValue: number
-  minInputValue: number
 }
 
-function Counter({minValue, maxValue, count, setCount, inputFocus, maxInputValue, minInputValue}: PropsType) {
+function Counter({inputFocus}: PropsType) {
+  
+  const count = useAppSelector(state => state.counter.count)
+  const min = useAppSelector(state => state.counter.min)
+  const max = useAppSelector(state => state.counter.max)
+  const dispatch = useDispatch()
+  
   const [error, setError] = useState('')
   const blueMessage = "enter values and press 'set'";
 
   useEffect(() => {
-    if(minInputValue >= maxInputValue || minInputValue < 0) {
+    if(min >= max || min < 0) {
       setError('incorect value')
     } else {
       setError('')
     }
-  }, [minInputValue, maxInputValue]);
+  }, [min, max]);
 
   const incrementHandler = () => {
-    if(count < maxValue) {
-      setCount(count + 1)
+    if(count < max) {
+      dispatch(incValueAC())
     }
   }
 
   const resetHandler = () => {
-    setCount(minValue)
+    dispatch(resetValueAC())
   }
 
   return (
     <div className={s.counter}>
-      <div className={count === maxValue ? s.valueItem : s.counterItem}>
+      <div className={count === max ? s.valueItem : s.counterItem}>
 
         {!inputFocus && count}
         {inputFocus && !error  && <span className={s.message}>{blueMessage}</span>}
@@ -48,7 +51,7 @@ function Counter({minValue, maxValue, count, setCount, inputFocus, maxInputValue
           className={s.btn}
           title={'inc'} 
           callBack={incrementHandler}
-          disabled={inputFocus || count === maxValue}
+          disabled={inputFocus || count === max}
         />
         <Button 
           className={s.btn}

@@ -1,40 +1,34 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import s from './CounterValue.module.css';
 import Button from '../button/Button';
+import { useAppSelector } from '../../hooks/hooks';
+import { useDispatch } from 'react-redux';
+import { setCountAC, setMaxInputValueAC, setMinInputValueAC } from '../../bll/countReducer';
 
 type PropsType = {
-  minValue: number
-  setMinValue: (value:number)=>void
-  maxValue: number
-  setMaxValue: (value:number)=>void
-  count: number;
-  setCount: (value:number)=>void
-  minInputValue: number
-  setMinInputValue: (value:number)=>void
-  maxInputValue: number
-  setMaxInputValue: (value:number)=>void
-  inputFocus: boolean
   setInputFocus: (value: boolean) => void
 };
 
-function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setCount, minInputValue, setMinInputValue, maxInputValue, setMaxInputValue, inputFocus, setInputFocus
-}: PropsType) {
+function CounterValue({setInputFocus}: PropsType) {
+
+  const min = useAppSelector(state => state.counter.min)
+  const max = useAppSelector(state => state.counter.max)
+  const dispatch = useDispatch()
+
   const [disabledBtn, setDisabledBtn] = useState<boolean>(false)
 
   const onChangeMinInputValue = (e:ChangeEvent<HTMLInputElement>) => {
-    setMinInputValue(+e.currentTarget.value)
+    dispatch(setMinInputValueAC(+e.currentTarget.value))
   }
 
   const onChangeMaxInputValue = (e:ChangeEvent<HTMLInputElement>) => {
-    setMaxInputValue(+e.currentTarget.value)
+    dispatch(setMaxInputValueAC(+e.currentTarget.value))
   }
 
   const onClickSetNewValueHandler = () => {
-    localStorage.setItem('maxValue', JSON.stringify(maxValue));
-    localStorage.setItem('startValue', JSON.stringify(minValue));
-    setCount(minInputValue)
-    setMinValue(minInputValue)
-    setMaxValue(maxInputValue)
+    dispatch(setCountAC(min))
+    dispatch(setMinInputValueAC(min))
+    dispatch(setMaxInputValueAC(max))
     setDisabledBtn(true)
   };
 
@@ -52,9 +46,9 @@ function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setC
         <div>
           <span>max value:</span>
           <input
-            className={minInputValue >= maxInputValue ? s.inputRed : s.inputStyle}
+            className={min >= max ? s.inputRed : s.inputStyle}
             onChange={onChangeMaxInputValue}
-            value={maxInputValue}
+            value={max}
             type="number"
             onFocus={onFocusHandler}
             onBlur={onBlurHandler}
@@ -63,9 +57,9 @@ function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setC
         <div>
           <span>start value:</span>
           <input
-            className={minInputValue < 0 || minInputValue >= maxInputValue ? s.inputRed : s.inputStyle}
+            className={min < 0 || min >= max ? s.inputRed : s.inputStyle}
             onChange={onChangeMinInputValue}
-            value={minInputValue}
+            value={min}
             type="number"
             onFocus={onFocusHandler}
             onBlur={onBlurHandler}
@@ -77,7 +71,7 @@ function CounterValue({minValue, setMinValue, maxValue, setMaxValue, count, setC
           className={s.btn}
           title={'set'} 
           callBack={onClickSetNewValueHandler}
-          disabled={minInputValue < 0 || minInputValue >= maxInputValue || disabledBtn}
+          disabled={min < 0 || min >= max || disabledBtn}
         />
       </div>
     </div>
