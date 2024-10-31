@@ -4,7 +4,9 @@ import { useDispatch } from 'react-redux'
 import { Input } from '../input/Input'
 
 export function SettingsCount() {
-  const {minInputValue, maxInputValue} = useAppSelector(state => state.counter)
+  
+  const min = useAppSelector(state => state.counter.min)
+  const max = useAppSelector(state => state.counter.max)
   const dispatch = useDispatch()
 
   return (
@@ -13,14 +15,14 @@ export function SettingsCount() {
         <span>max value:</span>
         <Input
           type='number'
-          value={maxInputValue}
+          value={max}
         />
       </div>
       <div>
         <span>start value:</span>
         <Input
           type='number'
-          value={minInputValue}
+          value={min}
         />
       </div>
 

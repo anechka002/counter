@@ -17,6 +17,11 @@ function CounterValue({setInputFocus}: PropsType) {
 
   const [disabledBtn, setDisabledBtn] = useState<boolean>(false)
 
+  // useEffect(() => {
+  //   dispatch(setMinInputValueAC(min))
+  //   dispatch(setMaxInputValueAC(max))
+  // }, [dispatch, min, max])
+
   const onChangeMinInputValue = (e:ChangeEvent<HTMLInputElement>) => {
     dispatch(setMinInputValueAC(+e.currentTarget.value))
   }

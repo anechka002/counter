@@ -6,8 +6,6 @@ const initialState = {
   count: MIN_VALUE,
   min: MIN_VALUE,
   max: MAX_VALUE,
-  minInputValue: MIN_VALUE,
-  maxInputValue: MAX_VALUE,
 }
 
 type InitialType = typeof initialState

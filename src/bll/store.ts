@@ -3,17 +3,20 @@ import { countReducer } from './countReducer';
 import { thunk } from 'redux-thunk';
 import { loadState, saveState } from '../utils/localStorage-utils';
 
+export interface RootState {
+  counter: ReturnType<typeof countReducer>; // Используйте ReturnType для конкретного редьюсера
+}
+
 const rootReducer = combineReducers({
   counter: countReducer,
 });
 
-export const store = createStore(rootReducer, loadState(), applyMiddleware(thunk));
+const persistedState = loadState();
+export const store = createStore(rootReducer, persistedState as Partial<RootState>, applyMiddleware(thunk));
 
 store.subscribe(() => {
-  saveState({
-    counter: store.getState().counter
-  })
+  saveState(store.getState())
 })
 
 export type RootReducerType = ReturnType<typeof rootReducer>;
-export type RootState = ReturnType<typeof store.getState>;
+// export type RootState = ReturnType<typeof store.getState>;
