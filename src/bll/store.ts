@@ -12,7 +12,15 @@ const rootReducer = combineReducers({
 });
 
 const persistedState = loadState();
-export const store = createStore(rootReducer, persistedState as Partial<RootState>, applyMiddleware(thunk));
+
+export const store = createStore(
+  rootReducer, 
+  persistedState as Partial<RootState>, 
+  applyMiddleware(thunk) 
+  // + window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
+
+(window as any).store = store;
 
 store.subscribe(() => {
   saveState(store.getState())

@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import s from './Counter.module.css'
 import Button from '../button/Button';
 import { useAppSelector } from '../../hooks/hooks';
@@ -12,20 +11,12 @@ type PropsType = {
 function Counter({inputFocus}: PropsType) {
   
   const count = useAppSelector(state => state.counter.count)
-  const min = useAppSelector(state => state.counter.min)
   const max = useAppSelector(state => state.counter.max)
+  const error = useAppSelector(state => state.counter.error)
+
   const dispatch = useDispatch()
   
-  const [error, setError] = useState('')
   const blueMessage = "enter values and press 'set'";
-
-  useEffect(() => {
-    if(min >= max || min < 0) {
-      setError('incorect value')
-    } else {
-      setError('')
-    }
-  }, [min, max]);
 
   const incrementHandler = () => {
     if(count < max) {
@@ -41,9 +32,12 @@ function Counter({inputFocus}: PropsType) {
     <div className={s.counter}>
       <div className={count === max ? s.valueItem : s.counterItem}>
 
-        {!inputFocus && count}
-        {inputFocus && !error  && <span className={s.message}>{blueMessage}</span>}
-        {error && <span className={s.error}>{error}</span>}
+      {error // Первым делом проверяем ошибки
+        ? <span className={s.error}>{error}</span>
+        : inputFocus // Если ошибок нет, проверяем фокус
+        ? <span className={s.message}>{blueMessage}</span>
+        : <span className={s.count}>{count}</span> // Если нет ошибок и фокуса - показываем счет
+      }
 
       </div>
       <div className={s.btnStyle}>

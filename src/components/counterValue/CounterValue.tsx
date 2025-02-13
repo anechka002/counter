@@ -1,9 +1,9 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import s from './CounterValue.module.css';
 import Button from '../button/Button';
 import { useAppSelector } from '../../hooks/hooks';
 import { useDispatch } from 'react-redux';
-import { setCountAC, setMaxInputValueAC, setMinInputValueAC } from '../../bll/countReducer';
+import { setCountAC, setErrorAC, setMaxInputValueAC, setMinInputValueAC } from '../../bll/countReducer';
 
 type PropsType = {
   setInputFocus: (value: boolean) => void
@@ -13,33 +13,41 @@ function CounterValue({setInputFocus}: PropsType) {
 
   const min = useAppSelector(state => state.counter.min)
   const max = useAppSelector(state => state.counter.max)
+
   const dispatch = useDispatch()
 
-  const [disabledBtn, setDisabledBtn] = useState<boolean>(false)
-
-  // useEffect(() => {
-  //   dispatch(setMinInputValueAC(min))
-  //   dispatch(setMaxInputValueAC(max))
-  // }, [dispatch, min, max])
+  const [minInputValue, setMinInputValue] = useState(min)
+  const [maxInputValue, setMaxInputValue] = useState(max)
 
   const onChangeMinInputValue = (e:ChangeEvent<HTMLInputElement>) => {
-    dispatch(setMinInputValueAC(+e.currentTarget.value))
+    const inputValue = +e.currentTarget.value
+    setMinInputValue(inputValue)
+    if(inputValue < 0 || inputValue >= maxInputValue) {
+      dispatch(setErrorAC('incorect value'))
+    } else {
+      dispatch(setErrorAC(''))
+    }
   }
 
   const onChangeMaxInputValue = (e:ChangeEvent<HTMLInputElement>) => {
-    dispatch(setMaxInputValueAC(+e.currentTarget.value))
+    const inputValue = +e.currentTarget.value
+    setMaxInputValue(inputValue)
+    if(minInputValue < 0 || minInputValue >= inputValue) {
+      dispatch(setErrorAC('incorect value'))
+    } else {
+      dispatch(setErrorAC(''))
+    }
   }
 
   const onClickSetNewValueHandler = () => {
-    dispatch(setCountAC(min))
-    dispatch(setMinInputValueAC(min))
-    dispatch(setMaxInputValueAC(max))
-    setDisabledBtn(true)
+    dispatch(setCountAC(minInputValue))
+    dispatch(setMinInputValueAC(minInputValue))
+    dispatch(setMaxInputValueAC(maxInputValue))
+    setInputFocus(false)
   };
 
   const onFocusHandler = () => {
     setInputFocus(true)
-    setDisabledBtn(false)
   }
   const onBlurHandler = () => {
     setInputFocus(false)
@@ -48,12 +56,12 @@ function CounterValue({setInputFocus}: PropsType) {
   return (
     <div className={s.counterValue}>
       <div className={s.inputField}>
-        <div>
+        <div className={s.value}>
           <span>max value:</span>
           <input
-            className={min >= max ? s.inputRed : s.inputStyle}
+            className={minInputValue >= maxInputValue ? s.inputRed : s.inputStyle}
             onChange={onChangeMaxInputValue}
-            value={max}
+            value={maxInputValue}
             type="number"
             onFocus={onFocusHandler}
             onBlur={onBlurHandler}
@@ -62,9 +70,9 @@ function CounterValue({setInputFocus}: PropsType) {
         <div>
           <span>start value:</span>
           <input
-            className={min < 0 || min >= max ? s.inputRed : s.inputStyle}
+            className={minInputValue < 0 || minInputValue >= maxInputValue ? s.inputRed : s.inputStyle}
             onChange={onChangeMinInputValue}
-            value={min}
+            value={minInputValue}
             type="number"
             onFocus={onFocusHandler}
             onBlur={onBlurHandler}
@@ -76,7 +84,7 @@ function CounterValue({setInputFocus}: PropsType) {
           className={s.btn}
           title={'set'} 
           callBack={onClickSetNewValueHandler}
-          disabled={min < 0 || min >= max || disabledBtn}
+          disabled={minInputValue < 0 || minInputValue >= maxInputValue}
         />
       </div>
     </div>
@@ -84,5 +92,3 @@ function CounterValue({setInputFocus}: PropsType) {
 }
 
 export default CounterValue;
-
-{/* <input value={minInputValue >= maxInputValue && minInputValue} /> */}

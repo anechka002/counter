@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: center;
   width: 300px;
-  height: 200px;
+  height: 300px;
   border: 1px solid #5be5f1;
   border-radius: 5px;
   background-color: #2e2c2c;
@@ -15,8 +15,16 @@
   border: 2px solid #5be5f1;
   border-radius: 5px;
   margin-bottom: 10px;
-  height: 100px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
+/* .value {
+  display: flex;
+} */
 
 .inputField span {
   font-size: 20px;

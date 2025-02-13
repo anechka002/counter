@@ -5,12 +5,9 @@ type PropsType = {
   callBack: () => void
 }&ButtonHTMLAttributes<HTMLButtonElement>
 
-function Button({title, callBack, ...restProps}: PropsType) {
-  const onClickHandler = () => {
-    callBack()
-  }
+function Button({title, callBack, disabled, ...restProps}: PropsType) {
   return (
-    <button {...restProps} onClick={onClickHandler}>{title}</button>
+    <button {...restProps} disabled={disabled} onClick={callBack}>{title}</button>
   )
 }
 
